@@ -1,0 +1,77 @@
+from PIL import Image
+from matplotlib import pyplot as plt
+
+def GrayscaleAndBinarization(image):
+    '''
+    灰度并二值化图片
+    :param image:
+    :return:
+    '''
+    threshold = 17  # 需要自己调节阈值
+
+    tmp_image = image.convert('L')  # 灰度化
+    new_image = Image.new('L', tmp_image.size, 0)
+
+    # 初步二值化
+    for i in range(tmp_image.size[1]):
+        for j in range(tmp_image.size[0]):
+            if tmp_image.getpixel((j, i)) > threshold:
+                new_image.putpixel((j, i), 255)
+            else:
+                new_image.putpixel((j, i), 0)
+
+    # new_image.show()    # 去噪前
+
+    # 去噪，去除独立点，将前后左右等九宫格中灰度通道值均为255的像素点的通道值设为255
+    for i in range(1, new_image.size[1] - 1):
+        for j in range(1, new_image.size[0] - 1):
+            if new_image.getpixel((j, i)) == 0 and new_image.getpixel((j - 1, i)) == 255 and new_image.getpixel((j + 1, i)) == 255 and \
+                    new_image.getpixel((j, i - 1)) == 255 and new_image.getpixel((j - 1, i - 1)) == 255 and new_image.getpixel((j + 1, i - 1)) == 255 and\
+                new_image.getpixel((j, i + 1)) == 255 and new_image.getpixel((j - 1, i + 1)) == 255 and new_image.getpixel((j + 1, i + 1)) == 255:
+                new_image.putpixel((j, i), 255)
+    # new_image.show()    # 去噪后
+
+    return new_image
+
+def SplitImage(image):
+    '''
+    切割图像并保存，关键在于寻找切割位置
+    :param image:
+    :return:
+    '''
+    splitSite = []
+    splitSite.append(0)
+    new_image = image
+
+    tmp_list = [0 for i in range(image.size[0])]
+    for i in range(image.size[0]):
+        for j in range(image.size[1]):
+            if image.getpixel((i, j)) == 0:
+                tmp_list[i] = 1
+                break
+
+    # print(tmp_list)
+    for index in range(0, len(tmp_list) - 1):
+        if tmp_list[index] == 1 and tmp_list[index + 1] == 0:
+            splitSite.append(index + 1)
+
+    plt.imshow(image)
+    for item in splitSite[1:]:
+        plt.plot([item for i in range(image.size[1])], [i for i in range(image.size[1])])
+    plt.show()
+    splitSite.append(image.size[0])
+
+    # 对图片进行切割
+    for index in range(1, len(splitSite) - 1):
+        box = (splitSite[index - 1], 0, splitSite[index], image.size[1])
+        new_image = image.crop(box)
+        new_image.save('./images/{}.gif'.format(str(index)))
+
+
+# image = Image.open('./images/ukyn.gif')
+image = Image.open('./images/vf20.gif')
+# image = Image.open('./images/c1th.gif')
+# image = Image.open('./images/vu3i.gif')
+image_after_GscaleAndBinarization = GrayscaleAndBinarization(image)
+image_after_GscaleAndBinarization.save('test.gif')
+# SplitImage(image_after_GscaleAndBinarization)
