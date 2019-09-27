@@ -3,8 +3,10 @@
 
 >二值化：二值化可以把灰度图片转换成二值图像，把大于某个临界灰度值的像素灰度设置为灰度极大值，把小于这个值的像素灰度设为灰度极小值，从而实现二值化。
 ---
-<img src="https://img-blog.csdnimg.cn/20190927145950285.gif" width="300" hegiht="313" align=center alt="原始图"/>  **原始图**    
+<img src="https://img-blog.csdnimg.cn/20190927145950285.gif" width="300" hegiht="313" align=center alt="原始图"/>  **原始图**   
+    
 <img src="https://img-blog.csdnimg.cn/20190927145226527.gif" width="300" hegiht="313" align=center alt="灰度图"/>  **灰度图**    
+    
 <img src="https://img-blog.csdnimg.cn/20190927150136434.gif" width="300" hegiht="313" align=center alt="二值化后的图"/>  **二值化后的图**
 ---
 **切割后效果图**
